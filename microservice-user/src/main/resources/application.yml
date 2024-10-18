@@ -1,0 +1,9 @@
+spring:
+  config:
+    import: optional:configserver:http://localhost:8888
+  application:
+    name: user-service
+
+jwt:
+  expiration: 86400000
+  secret: 3E3U3HR23GR627GR27723RY23IJR923R2379HRRJK934
