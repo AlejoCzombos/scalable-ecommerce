@@ -1,5 +1,7 @@
 package com.microservice.user.services.imp;
 
+import com.microservice.user.mappers.UserDtoMapper;
+import com.microservice.user.models.dto.UserDto;
 import com.microservice.user.models.entities.User;
 import com.microservice.user.repositories.UserRepository;
 import com.microservice.user.services.UserService;
@@ -16,9 +18,10 @@ public class UserServiceImpl implements UserService {
     private UserRepository repository;
 
     @Override
-    public User getUserById(Long id) throws Exception {
+    public UserDto getUserById(Long id) throws Exception {
         try {
-            return repository.findById(id).get();
+            User user = repository.findById(id).get();
+            return UserDtoMapper.toUserDto(user);
         }
         catch (Exception e) {
             System.out.println("USER NOT FOUND");
@@ -27,9 +30,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByEmail(String email) throws Exception {
+    public UserDto getUserByEmail(String email) throws Exception {
         try{
-            return repository.findByEmail(email).get();
+            User user = repository.findByEmail(email).get();
+            return UserDtoMapper.toUserDto(user);
         }
         catch (Exception e) {
             System.out.println("USER NOT FOUND");
@@ -38,9 +42,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() throws Exception {
+    public List<UserDto> getAllUsers() throws Exception {
         try {
-            return repository.findAll();
+            List<User> users = repository.findAll();
+            return users.stream().map(UserDtoMapper::toUserDto).toList();
         }
         catch (Exception e) {
             System.out.println("USERS NOT FOUND");

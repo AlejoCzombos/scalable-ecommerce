@@ -1,8 +1,9 @@
 package com.microservice.user.controllers;
 
 import com.microservice.user.models.dto.JwtResponse;
-import com.microservice.user.models.dto.LoginRequest;
-import com.microservice.user.models.dto.RegisterRequest;
+import com.microservice.user.models.dto.request.LoginRequest;
+import com.microservice.user.models.dto.request.RegisterRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,12 +16,12 @@ public interface AuthController {
             value = "/login",
             method = RequestMethod.POST
     )
-    ResponseEntity<JwtResponse> login(@RequestBody LoginRequest request);
+    ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequest request);
 
     @RequestMapping(
             value = "/register",
             method = RequestMethod.POST
     )
-    ResponseEntity<JwtResponse> register(@RequestBody RegisterRequest request);
+    ResponseEntity<JwtResponse> register(@Valid @RequestBody RegisterRequest request);
 
 }

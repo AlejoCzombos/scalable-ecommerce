@@ -1,8 +1,8 @@
 package com.microservice.user.services.imp;
 
 import com.microservice.user.models.dto.JwtResponse;
-import com.microservice.user.models.dto.LoginRequest;
-import com.microservice.user.models.dto.RegisterRequest;
+import com.microservice.user.models.dto.request.LoginRequest;
+import com.microservice.user.models.dto.request.RegisterRequest;
 import com.microservice.user.models.entities.User;
 import com.microservice.user.models.enums.UserRole;
 import com.microservice.user.repositories.UserRepository;
