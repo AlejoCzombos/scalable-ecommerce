@@ -11,13 +11,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
 @RequiredArgsConstructor
 public class AuthControllerImpl implements AuthController {
 
     private final AuthService service;
 
-    @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest request) {
         try{
             return ResponseEntity.ok(service.login(request));
@@ -26,7 +27,6 @@ public class AuthControllerImpl implements AuthController {
         }
     }
 
-    @PostMapping("/register")
     public ResponseEntity<JwtResponse> register(@RequestBody RegisterRequest request) {
         try {
             return ResponseEntity.ok(service.register(request));
