@@ -1,5 +1,7 @@
 package com.microservice.user.services.imp;
 
+import com.microservice.user.expections.EmailAlreadyExistsException;
+import com.microservice.user.expections.UserNotFoundException;
 import com.microservice.user.models.dto.JwtResponse;
 import com.microservice.user.models.dto.request.LoginRequest;
 import com.microservice.user.models.dto.request.RegisterRequest;
@@ -33,42 +35,36 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public JwtResponse login(LoginRequest request) throws Exception {
-        try {
-            authenticate(request.getEmail(), request.getPassword());
+    public JwtResponse login(LoginRequest request) {
+        authenticate(request.getEmail(), request.getPassword());
 
-            User user = userRepository.findByEmail(request.getEmail())
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UserNotFoundException(UserNotFoundException.MESSAGE_USER_NOT_FOUND + request.getEmail()));
 
-            String token = jwtUtil.generateToken(user);
+        String token = jwtUtil.generateToken(user);
 
-            return new JwtResponse(token);
-        } catch (BadCredentialsException | UsernameNotFoundException e) {
-            System.out.println(e.getMessage());
-            throw new BadCredentialsException("Incorrect username or password");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new Exception(e.getMessage());
-        }
+        return new JwtResponse(token);
     }
 
     @Override
-    @Transactional
-    public JwtResponse register(RegisterRequest request) throws Exception {
-        try {
-            User user = createUserFromRegistration(request);
-            user = userRepository.save(user);
-
-            String token = jwtUtil.generateToken(user);
-            return new JwtResponse(token);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new Exception(e.getMessage());
+    public JwtResponse register(RegisterRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new EmailAlreadyExistsException(EmailAlreadyExistsException.MESSAGE_EMAIL_ALREADY_EXISTS + request.getEmail());
         }
+
+        User user = createUserFromRegistration(request);
+        user = userRepository.save(user);
+        String token = jwtUtil.generateToken(user);
+
+        return new JwtResponse(token);
     }
 
     private void authenticate(String username, String password) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        } catch (BadCredentialsException e) {
+            throw new BadCredentialsException("Incorrect username or password");
+        }
     }
 
     private User createUserFromRegistration(RegisterRequest register) {

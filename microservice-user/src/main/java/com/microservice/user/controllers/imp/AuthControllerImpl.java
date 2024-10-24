@@ -19,19 +19,11 @@ public class AuthControllerImpl implements AuthController {
 
     private final AuthService service;
 
-    public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest request) {
-        try{
-            return ResponseEntity.ok(service.login(request));
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest request) throws Exception {
+        return new ResponseEntity<>(service.login(request), HttpStatus.OK);
     }
 
-    public ResponseEntity<JwtResponse> register(@RequestBody RegisterRequest request) {
-        try {
-            return ResponseEntity.ok(service.register(request));
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    public ResponseEntity<JwtResponse> register(@RequestBody RegisterRequest request) throws Exception {
+        return new ResponseEntity<>(service.register(request), HttpStatus.CREATED);
     }
 }

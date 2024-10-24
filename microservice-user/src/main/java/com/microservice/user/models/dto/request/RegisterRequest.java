@@ -14,7 +14,9 @@ public class RegisterRequest {
     @NotNull(message = "Password is required")
     private String password;
 
+//    @NotNull(message = "First name is required")
     private String firstName;
+//    @NotNull(message = "Last name is required")
     private String lastName;
     private String phone;
 }

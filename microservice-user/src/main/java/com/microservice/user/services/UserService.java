@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface UserService {
 
-    UserDto getUserById(Long id) throws Exception;
-    UserDto getUserByEmail(String email) throws Exception;
-    List<UserDto> getAllUsers() throws Exception;
+    UserDto getUserById(Long id);
+    UserDto getUserByEmail(String email);
+    List<UserDto> getAllUsers();
 
 }

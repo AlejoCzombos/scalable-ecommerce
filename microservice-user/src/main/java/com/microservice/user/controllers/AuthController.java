@@ -16,12 +16,12 @@ public interface AuthController {
             value = "/login",
             method = RequestMethod.POST
     )
-    ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequest request);
+    ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequest request) throws Exception;
 
     @RequestMapping(
             value = "/register",
             method = RequestMethod.POST
     )
-    ResponseEntity<JwtResponse> register(@Valid @RequestBody RegisterRequest request);
+    ResponseEntity<JwtResponse> register(@Valid @RequestBody RegisterRequest request) throws Exception;
 
 }
