@@ -11,6 +11,8 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
+    boolean existsByName(String name);
+
     @Query(nativeQuery = true, value = "SELECT * FROM products.product p WHERE p.category_id = categoryId ORDER BY ID DESC")
     List<Product> findByCategoryId(@Param("categoryId") Long categoryId);
 
