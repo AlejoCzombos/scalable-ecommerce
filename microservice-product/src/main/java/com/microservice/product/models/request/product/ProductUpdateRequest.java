@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class ProductUpdateRequest {
 
@@ -15,13 +17,13 @@ public class ProductUpdateRequest {
     private String description;
 
     @Positive(message = "Unit price must be greater than zero")
-    private Double unit_price;
+    private BigDecimal unitPrice;
 
     @Positive(message = "Stock must be greater than zero")
     private Integer stock;
 
-    private String image_url;
+    private String imageUrl;
 
-    private Long category_id;
+    private Long categoryId;
 
 }
