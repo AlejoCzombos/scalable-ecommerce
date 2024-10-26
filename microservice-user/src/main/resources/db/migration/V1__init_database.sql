@@ -6,6 +6,5 @@ create table if not exists db_user (
     password varchar(255) not null,
     phone varchar(255),
     role varchar(255) not null check (role in ('ADMIN','EMPLOYEE','CUSTOMER')),
-    primary key (user_id),
     constraint UK6mh6gc6k1iu7htpabhhn6rcvr unique (email)
 )
