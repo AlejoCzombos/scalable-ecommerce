@@ -13,6 +13,7 @@ public class ProductDtoMapper {
                 .description(product.getDescription())
                 .unitPrice(product.getUnitPrice())
                 .stock(product.getStock())
+                .imageUrl(product.getImageUrl())
                 .category(ProductCategoryDtoMapper.toProductCategoryDto(product.getProductCategory()))
                 .build();
     }
