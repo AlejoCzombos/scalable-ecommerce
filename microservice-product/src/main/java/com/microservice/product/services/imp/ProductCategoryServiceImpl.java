@@ -1,5 +1,6 @@
 package com.microservice.product.services.imp;
 
+import com.microservice.product.exceptions.custom.productCategory.ProductCategoryNameAlreadyExistsException;
 import com.microservice.product.exceptions.custom.productCategory.ProductCategoryNotFoundException;
 import com.microservice.product.mappers.productCategory.ProductCategoryCreateRequestMapper;
 import com.microservice.product.mappers.productCategory.ProductCategoryDtoMapper;
@@ -10,9 +11,11 @@ import com.microservice.product.models.request.productCategory.ProductCategoryUp
 import com.microservice.product.repostiories.ProductCategoryRepository;
 import com.microservice.product.services.ProductCategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 @RequiredArgsConstructor
 public class ProductCategoryServiceImpl implements ProductCategoryService {
 
@@ -37,7 +40,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         ProductCategory productCategory = ProductCategoryCreateRequestMapper.toProductCategory(productDto);
 
         if (repository.existsByName(productCategory.getName())) {
-            throw new ProductCategoryNotFoundException(ProductCategoryNotFoundException.MESSAGE + "with name: " + productCategory.getName());
+            throw new ProductCategoryNameAlreadyExistsException(ProductCategoryNameAlreadyExistsException.MESSAGE + "with name: " + productCategory.getName());
         }
 
         ProductCategory productCategorySaved = repository.save(productCategory);
@@ -49,8 +52,8 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     public ProductCategoryDto updateProduct(ProductCategoryUpdateRequest productDto) {
         ProductCategory productCategory = repository.findById(productDto.getId()).orElseThrow( () -> new ProductCategoryNotFoundException(ProductCategoryNotFoundException.MESSAGE + "with id: " + productDto.getId()));
 
-        if (repository.existsByName(productDto.getName())) {
-            throw new ProductCategoryNotFoundException(ProductCategoryNotFoundException.MESSAGE + "with name: " + productDto.getName());
+        if (repository.existsByName(productCategory.getName())) {
+            throw new ProductCategoryNameAlreadyExistsException(ProductCategoryNameAlreadyExistsException.MESSAGE + "with name: " + productCategory.getName());
         }
 
         ProductCategory productCategorySaved = repository.save(productCategory);

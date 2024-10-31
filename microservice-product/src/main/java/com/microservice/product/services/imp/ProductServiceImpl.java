@@ -2,6 +2,7 @@ package com.microservice.product.services.imp;
 
 import com.microservice.product.exceptions.custom.product.ProductNameAlreadyExistsException;
 import com.microservice.product.exceptions.custom.product.ProductNotFoundException;
+import com.microservice.product.exceptions.custom.productCategory.ProductCategoryNotFoundException;
 import com.microservice.product.mappers.product.ProductCreateRequestMapper;
 import com.microservice.product.mappers.product.ProductDtoMapper;
 import com.microservice.product.models.dto.ProductDto;
@@ -12,9 +13,11 @@ import com.microservice.product.repostiories.ProductCategoryRepository;
 import com.microservice.product.repostiories.ProductRepository;
 import com.microservice.product.services.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
@@ -43,8 +46,8 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductNameAlreadyExistsException(ProductNameAlreadyExistsException.MESSAGE + "with name: " + product.getName());
         }
 
-        if (categoryRepository.existsById(productDto.getCategoryId())) {
-            throw new ProductNotFoundException(ProductNotFoundException.MESSAGE + "with id: " + productDto.getCategoryId());
+        if (!categoryRepository.existsById(productDto.getCategoryId())) {
+            throw new ProductCategoryNotFoundException(ProductCategoryNotFoundException.MESSAGE + "with id: " + productDto.getCategoryId());
         }
         product.setProductCategory(categoryRepository.getById(productDto.getCategoryId()));
 
@@ -61,8 +64,8 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductNameAlreadyExistsException(ProductNameAlreadyExistsException.MESSAGE + "with name: " + productDto.getName());
         }
 
-        if (categoryRepository.existsById(productDto.getCategoryId())) {
-            throw new ProductNotFoundException(ProductNotFoundException.MESSAGE + "with id: " + productDto.getCategoryId());
+        if (!categoryRepository.existsById(productDto.getCategoryId())) {
+            throw new ProductCategoryNotFoundException(ProductCategoryNotFoundException.MESSAGE + "with id: " + productDto.getCategoryId());
         }
         product.setProductCategory(categoryRepository.getById(productDto.getCategoryId()));
 
