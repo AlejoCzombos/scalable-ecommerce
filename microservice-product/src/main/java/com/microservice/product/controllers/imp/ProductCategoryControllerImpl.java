@@ -1,11 +1,15 @@
 package com.microservice.product.controllers.imp;
 
 import com.microservice.product.controllers.ProductCategoryControllerAPI;
+import com.microservice.product.models.dto.PageResponse;
 import com.microservice.product.models.dto.ProductCategoryDto;
 import com.microservice.product.models.request.productCategory.ProductCategoryCreateRequest;
 import com.microservice.product.models.request.productCategory.ProductCategoryUpdateRequest;
 import com.microservice.product.services.ProductCategoryService;
+import com.microservice.product.utils.UtilitiesFunctions;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,8 +23,12 @@ public class ProductCategoryControllerImpl implements ProductCategoryControllerA
     private final ProductCategoryService productCategoryService;
 
     @Override
-    public ResponseEntity<List<ProductCategoryDto>> getAllProducts() {
-        return new ResponseEntity<>(productCategoryService.getAllProducts(), HttpStatus.OK);
+    public ResponseEntity<PageResponse<ProductCategoryDto>> getAllProducts(int page, int size) {
+        if(UtilitiesFunctions.isInvalidPageRequest(page, size)){
+            throw new IllegalArgumentException("The amount of elements cannot be more than 50, and page index must not be less than zero");
+        }
+        Pageable pageable = PageRequest.of(page, size);
+        return new ResponseEntity<>(productCategoryService.getAllProducts(pageable), HttpStatus.OK);
     }
 
     @Override

@@ -3,8 +3,10 @@ package com.microservice.product.services.imp;
 import com.microservice.product.exceptions.custom.product.ProductNameAlreadyExistsException;
 import com.microservice.product.exceptions.custom.product.ProductNotFoundException;
 import com.microservice.product.exceptions.custom.productCategory.ProductCategoryNotFoundException;
+import com.microservice.product.mappers.PageResponseMapper;
 import com.microservice.product.mappers.product.ProductCreateRequestMapper;
 import com.microservice.product.mappers.product.ProductDtoMapper;
+import com.microservice.product.models.dto.PageResponse;
 import com.microservice.product.models.dto.ProductDto;
 import com.microservice.product.models.entities.Product;
 import com.microservice.product.models.request.product.ProductCreateRequest;
@@ -13,6 +15,8 @@ import com.microservice.product.repostiories.ProductCategoryRepository;
 import com.microservice.product.repostiories.ProductRepository;
 import com.microservice.product.services.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,10 +29,11 @@ public class ProductServiceImpl implements ProductService {
     private final ProductCategoryRepository categoryRepository;
 
     @Override
-    public List<ProductDto> getAllProducts() {
-        List<Product> products = repository.findAll();
+    public PageResponse<ProductDto> getAllProducts(Pageable pageable) {
+        Page<Product> products = repository.findAll(pageable);
+        products.getPageable().getPageNumber();
 
-        return products.stream().map(ProductDtoMapper::toProductDto).toList();
+        return PageResponseMapper.convertToPageResponse(products, ProductDtoMapper::toProductDto);
     }
 
     @Override

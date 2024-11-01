@@ -32,6 +32,15 @@ public class GlobalExceptionHandler {
         return new ValidationErrorResponse(errors);
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalArgumentException.class)
+    MessageException handleIllegalArgumentException(HttpServletRequest request, IllegalArgumentException e){
+        return MessageException.builder()
+                .message(e.getLocalizedMessage())
+                .uri(request.getRequestURI())
+                .build();
+    }
+
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     @ExceptionHandler(ProductNotFoundException.class)
     MessageException handleProductNotFoundException(HttpServletRequest request, ProductNotFoundException e){

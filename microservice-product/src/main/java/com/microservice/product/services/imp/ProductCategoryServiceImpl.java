@@ -2,8 +2,10 @@ package com.microservice.product.services.imp;
 
 import com.microservice.product.exceptions.custom.productCategory.ProductCategoryNameAlreadyExistsException;
 import com.microservice.product.exceptions.custom.productCategory.ProductCategoryNotFoundException;
+import com.microservice.product.mappers.PageResponseMapper;
 import com.microservice.product.mappers.productCategory.ProductCategoryCreateRequestMapper;
 import com.microservice.product.mappers.productCategory.ProductCategoryDtoMapper;
+import com.microservice.product.models.dto.PageResponse;
 import com.microservice.product.models.dto.ProductCategoryDto;
 import com.microservice.product.models.entities.ProductCategory;
 import com.microservice.product.models.request.productCategory.ProductCategoryCreateRequest;
@@ -11,9 +13,9 @@ import com.microservice.product.models.request.productCategory.ProductCategoryUp
 import com.microservice.product.repostiories.ProductCategoryRepository;
 import com.microservice.product.services.ProductCategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +24,11 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     private final ProductCategoryRepository repository;
 
     @Override
-    public List<ProductCategoryDto> getAllProducts() {
-        List<ProductCategory> productCategories = repository.findAll();
+    public PageResponse<ProductCategoryDto> getAllProducts(Pageable pageable) {
+        Page<ProductCategory> productCategories = repository.findAll(pageable);
+        productCategories.getPageable().getPageNumber();
 
-        return productCategories.stream().map(ProductCategoryDtoMapper::toProductCategoryDto).toList();
+        return PageResponseMapper.convertToPageResponse(productCategories, ProductCategoryDtoMapper::toProductCategoryDto);
     }
 
     @Override

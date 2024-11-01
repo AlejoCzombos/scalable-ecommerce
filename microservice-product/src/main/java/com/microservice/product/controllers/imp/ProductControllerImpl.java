@@ -1,11 +1,15 @@
 package com.microservice.product.controllers.imp;
 
 import com.microservice.product.controllers.ProductControllerAPI;
+import com.microservice.product.models.dto.PageResponse;
 import com.microservice.product.models.dto.ProductDto;
 import com.microservice.product.models.request.product.ProductCreateRequest;
 import com.microservice.product.models.request.product.ProductUpdateRequest;
 import com.microservice.product.services.ProductService;
+import com.microservice.product.utils.UtilitiesFunctions;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,8 +23,12 @@ public class ProductControllerImpl implements ProductControllerAPI {
     private final ProductService productService;
 
     @Override
-    public ResponseEntity<List<ProductDto>> getAllProducts() {
-        return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
+    public ResponseEntity<PageResponse<ProductDto>> getAllProducts(int page, int size) {
+        if(UtilitiesFunctions.isInvalidPageRequest(page, size)){
+            throw new IllegalArgumentException("The amount of elements cannot be more than 50, and page index must not be less than zero");
+        }
+        Pageable pageable = PageRequest.of(page, size);
+        return new ResponseEntity<>(productService.getAllProducts(pageable), HttpStatus.OK);
     }
 
     @Override
@@ -42,4 +50,5 @@ public class ProductControllerImpl implements ProductControllerAPI {
     public ResponseEntity<ProductDto> deleteProduct(Long id) {
         return new ResponseEntity<>(productService.deleteProduct(id), HttpStatus.NO_CONTENT);
     }
+
 }

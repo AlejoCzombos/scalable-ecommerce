@@ -1,16 +1,16 @@
 package com.microservice.product.services;
 
+import com.microservice.product.models.dto.PageResponse;
 import com.microservice.product.models.dto.ProductDto;
 import com.microservice.product.models.request.product.ProductCreateRequest;
 import com.microservice.product.models.request.product.ProductUpdateRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public interface ProductService {
 
-    List<ProductDto> getAllProducts();
+    PageResponse<ProductDto> getAllProducts(Pageable pageable);
     ProductDto getProductById(Long id);
     ProductDto createProduct(ProductCreateRequest productDto);
     ProductDto updateProduct(ProductUpdateRequest productDto);
