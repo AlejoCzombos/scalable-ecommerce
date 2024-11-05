@@ -9,6 +9,7 @@ import com.microservice.product.mappers.product.ProductDtoMapper;
 import com.microservice.product.models.dto.PageResponse;
 import com.microservice.product.models.dto.ProductDto;
 import com.microservice.product.models.entities.Product;
+import com.microservice.product.models.request.filter.ProductFilter;
 import com.microservice.product.models.request.product.ProductCreateRequest;
 import com.microservice.product.models.request.product.ProductUpdateRequest;
 import com.microservice.product.repostiories.ProductCategoryRepository;
@@ -16,7 +17,9 @@ import com.microservice.product.repostiories.ProductRepository;
 import com.microservice.product.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,6 +36,41 @@ public class ProductServiceImpl implements ProductService {
         Page<Product> products = repository.findAll(pageable);
         products.getPageable().getPageNumber();
 
+        return PageResponseMapper.convertToPageResponse(products, ProductDtoMapper::toProductDto);
+    }
+
+    @Override
+    public PageResponse<ProductDto> getAllProductsWithFilter(ProductFilter filter) {
+
+        if (!List.of("id", "name", "unitPrice", "stock").contains(filter.getOrderBy().getField())) {
+            throw new IllegalArgumentException("The field to order by must be one of the following: id, name, categoryName, unitPrice, stock");
+        }
+
+        Pageable pageable = PageRequest.of(
+                filter.getPage(),
+                filter.getSize(),
+                filter.getOrderBy().isAscending() ?
+                        Sort.by(filter.getOrderBy().getField()).ascending() :
+                        Sort.by(filter.getOrderBy().getField()).descending()
+        );
+
+        if (repository.existsByName(filter.getName())) {
+            throw new ProductNotFoundException(ProductNotFoundException.MESSAGE + "with name: " + filter.getName());
+        }
+        if (categoryRepository.existsByName(filter.getCategoryName())) {
+            throw new ProductCategoryNotFoundException(ProductCategoryNotFoundException.MESSAGE + "with name: " + filter.getCategoryName());
+        }
+
+        Page<Product> products = repository.findByFilters(
+                filter.getName() != null ? filter.getName().toLowerCase() : null,
+                filter.getCategoryName() != null ? filter.getCategoryName().toLowerCase() : null,
+                filter.getMinPrice(),
+                filter.getMaxPrice(),
+                filter.getInStock(),
+                pageable
+        );
+
+        products.getPageable().getPageNumber();
         return PageResponseMapper.convertToPageResponse(products, ProductDtoMapper::toProductDto);
     }
 
