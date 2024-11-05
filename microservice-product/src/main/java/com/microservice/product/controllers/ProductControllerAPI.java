@@ -81,4 +81,30 @@ public interface ProductControllerAPI {
             Long id
     );
 
+    @RequestMapping(
+            value = "/add-stock/{productId}",
+            method = RequestMethod.PATCH
+    )
+    ResponseEntity<ProductDto> addStockForProduct(
+            @PathVariable
+            @NotNull(message = "Product id is required")
+            Long productId,
+            @Positive(message = "Amount must be greater than zero")
+            @RequestParam
+            int amount
+    );
+
+    @RequestMapping(
+            value = "/remove-stock/{productId}",
+            method = RequestMethod.PATCH
+    )
+    ResponseEntity<ProductDto> removeStockOfProduct(
+            @PathVariable
+            @NotNull(message = "Product id is required")
+            Long productId,
+            @Positive(message = "Amount must be greater than zero")
+            @RequestParam
+            int amount
+    );
+
 }

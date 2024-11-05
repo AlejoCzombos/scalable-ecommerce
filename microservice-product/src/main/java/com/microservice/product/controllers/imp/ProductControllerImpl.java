@@ -83,4 +83,14 @@ public class ProductControllerImpl implements ProductControllerAPI {
         return new ResponseEntity<>(productService.deleteProduct(id), HttpStatus.NO_CONTENT);
     }
 
+    @Override
+    public ResponseEntity<ProductDto> addStockForProduct(Long productId, int amount) {
+        return new ResponseEntity<>(productService.addStockForProduct(productId, amount), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<ProductDto> removeStockOfProduct(Long productId, int amount) {
+        return new ResponseEntity<>(productService.removeStockOfProduct(productId, amount), HttpStatus.OK);
+    }
+
 }

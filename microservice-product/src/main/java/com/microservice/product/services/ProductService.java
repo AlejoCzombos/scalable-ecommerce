@@ -2,6 +2,7 @@ package com.microservice.product.services;
 
 import com.microservice.product.models.dto.PageResponse;
 import com.microservice.product.models.dto.ProductDto;
+import com.microservice.product.models.entities.Product;
 import com.microservice.product.models.request.filter.ProductFilter;
 import com.microservice.product.models.request.product.ProductCreateRequest;
 import com.microservice.product.models.request.product.ProductUpdateRequest;
@@ -17,8 +18,7 @@ public interface ProductService {
     ProductDto createProduct(ProductCreateRequest productDto);
     ProductDto updateProduct(ProductUpdateRequest productDto);
     ProductDto deleteProduct(Long id);
-
-//    ProductDto addStockForProduct(Long productId, int amount);
-//    void removeStockOfProduct(Long productId, int amount);
+    ProductDto addStockForProduct(Long productId, int amount);
+    ProductDto removeStockOfProduct(Long productId, int amount);
 
 }

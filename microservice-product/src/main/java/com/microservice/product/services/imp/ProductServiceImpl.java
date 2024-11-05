@@ -125,4 +125,29 @@ public class ProductServiceImpl implements ProductService {
 
         return ProductDtoMapper.toProductDto(new Product());
     }
+
+    @Override
+    public ProductDto addStockForProduct(Long productId, int amount) {
+        Product product = repository.findById(productId).orElseThrow(() -> new ProductNotFoundException(ProductNotFoundException.MESSAGE + "with id: " + productId));
+
+        product.setStock(product.getStock() + amount);
+        Product productSaved = repository.save(product);
+
+        return ProductDtoMapper.toProductDto(productSaved);
+    }
+
+    @Override
+    public ProductDto removeStockOfProduct(Long productId, int amount) {
+        Product product = repository.findById(productId).orElseThrow(() -> new ProductNotFoundException(ProductNotFoundException.MESSAGE + "with id: " + productId));
+
+        if (product.getStock() - amount < 0) {
+            throw new IllegalArgumentException("The amount to remove is greater than the stock of the product");
+        }
+
+        product.setStock(product.getStock() - amount);
+        Product productSaved = repository.save(product);
+
+        return ProductDtoMapper.toProductDto(productSaved);
+    }
+
 }
