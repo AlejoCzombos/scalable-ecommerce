@@ -18,6 +18,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(nativeQuery = true, value = "SELECT * FROM product p WHERE p.category_id = :categoryId ORDER BY category_id DESC")
     List<Product> findByCategoryId(@Param("categoryId") Long categoryId);
 
+    List<Product> findAllByIdInOrderById(List<Long> ids);
+
     @Query(value = """
         SELECT p FROM Product p
         WHERE (:name IS NULL OR LOWER(p.name) LIKE %:name%)
@@ -34,5 +36,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("inStock") Boolean inStock,
             Pageable pageable
     );
-
 }

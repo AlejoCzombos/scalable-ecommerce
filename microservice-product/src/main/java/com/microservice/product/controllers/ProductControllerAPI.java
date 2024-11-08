@@ -2,7 +2,9 @@ package com.microservice.product.controllers;
 
 import com.microservice.product.models.dto.PageResponse;
 import com.microservice.product.models.dto.ProductDto;
+import com.microservice.product.models.dto.ProductPurchaseResponse;
 import com.microservice.product.models.request.product.ProductCreateRequest;
+import com.microservice.product.models.request.product.ProductPurchaseRequest;
 import com.microservice.product.models.request.product.ProductUpdateRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -10,6 +12,8 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("/api/products")
 public interface ProductControllerAPI {
@@ -49,6 +53,16 @@ public interface ProductControllerAPI {
             @PathVariable
             @NotNull(message = "Id is required")
             Long id
+    );
+
+    @RequestMapping(
+            value = "/purchase",
+            method = RequestMethod.POST
+    )
+    ResponseEntity<List<ProductPurchaseResponse>> purchaseProducts(
+            @Valid
+            @RequestBody
+            List<ProductPurchaseRequest> purchase
     );
 
     @RequestMapping(

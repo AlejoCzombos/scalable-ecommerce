@@ -2,15 +2,19 @@ package com.microservice.product.services.imp;
 
 import com.microservice.product.exceptions.custom.product.ProductNameAlreadyExistsException;
 import com.microservice.product.exceptions.custom.product.ProductNotFoundException;
+import com.microservice.product.exceptions.custom.product.ProductPurchaseException;
 import com.microservice.product.exceptions.custom.productCategory.ProductCategoryNotFoundException;
 import com.microservice.product.mappers.PageResponseMapper;
 import com.microservice.product.mappers.product.ProductCreateRequestMapper;
 import com.microservice.product.mappers.product.ProductDtoMapper;
+import com.microservice.product.mappers.product.ProductPurchaseMapper;
 import com.microservice.product.models.dto.PageResponse;
 import com.microservice.product.models.dto.ProductDto;
+import com.microservice.product.models.dto.ProductPurchaseResponse;
 import com.microservice.product.models.entities.Product;
 import com.microservice.product.models.request.filter.ProductFilter;
 import com.microservice.product.models.request.product.ProductCreateRequest;
+import com.microservice.product.models.request.product.ProductPurchaseRequest;
 import com.microservice.product.models.request.product.ProductUpdateRequest;
 import com.microservice.product.repostiories.ProductCategoryRepository;
 import com.microservice.product.repostiories.ProductRepository;
@@ -21,7 +25,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -72,6 +79,32 @@ public class ProductServiceImpl implements ProductService {
 
         products.getPageable().getPageNumber();
         return PageResponseMapper.convertToPageResponse(products, ProductDtoMapper::toProductDto);
+    }
+
+    @Override
+    @Transactional(rollbackFor = ProductPurchaseException.class)
+    public List<ProductPurchaseResponse> purchaseProducts(List<ProductPurchaseRequest> purchase) {
+        List<Long> productIds = purchase.stream().map(ProductPurchaseRequest::getProductId).toList();
+        List<Product> storedProducts = repository.findAllByIdInOrderById(productIds);
+
+        if (productIds.size() != storedProducts.size()) {
+            throw new ProductPurchaseException("Some products were not found");
+        }
+
+        List<ProductPurchaseRequest> sortedRequest = purchase.stream().sorted(Comparator.comparing(ProductPurchaseRequest::getProductId)).toList();
+        var purchasedProducts = new ArrayList<ProductPurchaseResponse>();
+        for (int i = 0; i < storedProducts.size(); i++) {
+            var product = storedProducts.get(i);
+            var productRequest = sortedRequest.get(i);
+            if (product.getStock() < productRequest.getQuantity()) {
+                throw new ProductPurchaseException("Insufficient stock quantity for product with id " + productRequest.getProductId());
+            }
+            var newStock = product.getStock() - productRequest.getQuantity();
+            product.setStock(newStock);
+            Product savedProduct = repository.save(product);
+            purchasedProducts.add(ProductPurchaseMapper.toproductPurchaseResponse(savedProduct));
+        }
+        return purchasedProducts;
     }
 
     @Override

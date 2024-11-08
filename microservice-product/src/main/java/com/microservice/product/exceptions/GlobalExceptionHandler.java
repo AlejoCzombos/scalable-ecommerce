@@ -2,6 +2,7 @@ package com.microservice.product.exceptions;
 
 import com.microservice.product.exceptions.custom.product.ProductNameAlreadyExistsException;
 import com.microservice.product.exceptions.custom.product.ProductNotFoundException;
+import com.microservice.product.exceptions.custom.product.ProductPurchaseException;
 import com.microservice.product.exceptions.custom.productCategory.ProductCategoryNameAlreadyExistsException;
 import com.microservice.product.exceptions.custom.productCategory.ProductCategoryNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,6 +36,15 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IllegalArgumentException.class)
     MessageException handleIllegalArgumentException(HttpServletRequest request, IllegalArgumentException e){
+        return MessageException.builder()
+                .message(e.getLocalizedMessage())
+                .uri(request.getRequestURI())
+                .build();
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ProductPurchaseException.class)
+    MessageException handleProductPurchaseException(HttpServletRequest request, ProductPurchaseException e){
         return MessageException.builder()
                 .message(e.getLocalizedMessage())
                 .uri(request.getRequestURI())
