@@ -1,0 +1,33 @@
+server:
+  port: 8060
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/orderdb
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: create
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    baseline-on-migrate: true
+    enabled: true
+    baseline-description: "init"
+    baseline-version: 0
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+
+application:
+  config:
+    #Replace the following with the api-gateway URL
+    product-url: http://localhost:8050/api/products
+    auth-url: http://localhost:8090/api/auth
+    user-url: http://localhost:8090/api/users
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
