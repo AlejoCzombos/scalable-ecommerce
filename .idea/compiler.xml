@@ -11,6 +11,7 @@
         <module name="microservice-user" />
         <module name="microservice-eureka" />
         <module name="microservice-config" />
+        <module name="microservice-order" />
       </profile>
     </annotationProcessing>
   </component>
@@ -18,6 +19,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="microservice-config" options="-parameters" />
       <module name="microservice-eureka" options="-parameters" />
+      <module name="microservice-order" options="-parameters" />
       <module name="microservice-product" options="-parameters" />
       <module name="microservice-user" options="-parameters" />
     </option>

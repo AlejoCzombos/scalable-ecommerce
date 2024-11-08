@@ -8,6 +8,7 @@
         <option value="$PROJECT_DIR$/microservice-eureka/pom.xml" />
         <option value="$PROJECT_DIR$/microservice-user/pom.xml" />
         <option value="$PROJECT_DIR$/microservice-product/pom.xml" />
+        <option value="$PROJECT_DIR$/microservice-order/pom.xml" />
       </list>
     </option>
     <option name="workspaceImportForciblyTurnedOn" value="true" />
