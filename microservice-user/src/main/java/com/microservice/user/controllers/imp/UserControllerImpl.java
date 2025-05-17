@@ -17,19 +17,16 @@ public class UserControllerImpl implements UserController {
     private final UserService service;
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<UserDto> getUserById(Long id) {
         return ResponseEntity.ok(service.getUserById(id));
     }
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<UserDto> getUserByEmail(String email) {
         return ResponseEntity.ok(service.getUserByEmail(email));
     }
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<UserDto>> getAllUsers() {
         return ResponseEntity.ok(service.getAllUsers());
     }

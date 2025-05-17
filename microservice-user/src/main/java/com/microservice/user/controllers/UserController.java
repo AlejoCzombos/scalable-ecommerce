@@ -17,18 +17,21 @@ public interface UserController {
             value = "/by-id/{id}",
             method = RequestMethod.GET
     )
+//    @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<UserDto> getUserById(@PathVariable @NotNull(message = "Id is required") Long id) throws Exception ;
 
     @RequestMapping(
             value = "/by-email/{email}",
             method = RequestMethod.GET
     )
+    @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<UserDto> getUserByEmail(@PathVariable @NotNull(message = "Email is required") String email) throws Exception ;
 
     @RequestMapping(
             value = "/all",
             method = RequestMethod.GET
     )
+//    @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<List<UserDto>> getAllUsers() throws Exception ;
 
 }
